@@ -1,6 +1,6 @@
-# AES-256 Encryption Library
+# AES-256 Encryption Wrapper for OpenSSL
 
-This library provides AES-256 encryption and decryption functions using GCM and CTR modes. It leverages OpenSSL for cryptographic operations and is designed to be fast and efficient.
+This Wrapper/Library provides AES-256 encryption and decryption functions using GCM and CTR modes. It leverages OpenSSL for cryptographic operations and is designed to be fast and efficient.
 
 ## Features
 
