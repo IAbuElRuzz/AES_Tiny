@@ -2,6 +2,7 @@
 #include <openssl/evp.h>
 #include <string.h>
 
+// Function to encrypt data using AES-256 GCM
 int aes256_gcm_encrypt(const AES256_CTX *ctx, const uint8_t *plaintext, int plaintext_len,
                        const uint8_t *aad, int aad_len,
                        uint8_t *ciphertext, uint8_t *tag) {
@@ -20,9 +21,11 @@ int aes256_gcm_encrypt(const AES256_CTX *ctx, const uint8_t *plaintext, int plai
         return -1;
     }
 
-    if (1 != EVP_EncryptUpdate(cipher_ctx, NULL, &len, aad, aad_len)) {
-        EVP_CIPHER_CTX_free(cipher_ctx);
-        return -1;
+    if (aad && aad_len > 0) {
+        if (1 != EVP_EncryptUpdate(cipher_ctx, NULL, &len, aad, aad_len)) {
+            EVP_CIPHER_CTX_free(cipher_ctx);
+            return -1;
+        }
     }
 
     if (1 != EVP_EncryptUpdate(cipher_ctx, ciphertext, &len, plaintext, plaintext_len)) {
@@ -46,6 +49,7 @@ int aes256_gcm_encrypt(const AES256_CTX *ctx, const uint8_t *plaintext, int plai
     return ciphertext_len;
 }
 
+// Function to decrypt data using AES-256 GCM
 int aes256_gcm_decrypt(const AES256_CTX *ctx, const uint8_t *ciphertext, int ciphertext_len,
                        const uint8_t *aad, int aad_len,
                        const uint8_t *tag, uint8_t *plaintext) {
@@ -64,9 +68,11 @@ int aes256_gcm_decrypt(const AES256_CTX *ctx, const uint8_t *ciphertext, int cip
         return -1;
     }
 
-    if (1 != EVP_DecryptUpdate(cipher_ctx, NULL, &len, aad, aad_len)) {
-        EVP_CIPHER_CTX_free(cipher_ctx);
-        return -1;
+    if (aad && aad_len > 0) {
+        if (1 != EVP_DecryptUpdate(cipher_ctx, NULL, &len, aad, aad_len)) {
+            EVP_CIPHER_CTX_free(cipher_ctx);
+            return -1;
+        }
     }
 
     if (1 != EVP_DecryptUpdate(cipher_ctx, plaintext, &len, ciphertext, ciphertext_len)) {
@@ -90,6 +96,7 @@ int aes256_gcm_decrypt(const AES256_CTX *ctx, const uint8_t *ciphertext, int cip
     return plaintext_len;
 }
 
+// Function to encrypt data using AES-256 CTR
 int aes256_ctr_encrypt(const AES256_CTX *ctx, const uint8_t *plaintext, int plaintext_len,
                        uint8_t *ciphertext) {
     EVP_CIPHER_CTX *cipher_ctx = EVP_CIPHER_CTX_new();
@@ -118,6 +125,7 @@ int aes256_ctr_encrypt(const AES256_CTX *ctx, const uint8_t *plaintext, int plai
     return ciphertext_len;
 }
 
+// Function to decrypt data using AES-256 CTR
 int aes256_ctr_decrypt(const AES256_CTX *ctx, const uint8_t *ciphertext, int ciphertext_len,
                        uint8_t *plaintext) {
     EVP_CIPHER_CTX *cipher_ctx = EVP_CIPHER_CTX_new();
